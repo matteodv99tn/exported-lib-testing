@@ -1,0 +1,30 @@
+name: relase
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  export-package:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Project build
+        run: |
+          mkdir build
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          cmake --install build --prefix install/
+
+      - name: Project packaging
+        run: tar -czvf mdvlib.tar.gz install/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mdvlib
+          path: mdvlib.tar.gz

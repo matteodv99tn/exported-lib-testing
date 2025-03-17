@@ -16,8 +16,8 @@ jobs:
 
       - name: Get dependencies
         run: |
-          apt-get update
-          apt-get install -y build-essential cmake
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
 
       - name: Project build
         run: |

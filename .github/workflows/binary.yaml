@@ -2,8 +2,8 @@ name: relase
 
 on:
   push:
-    branches:
-      - "main"
+    tags:
+      - "prerelease"
 
 jobs:
   export-package:
@@ -22,19 +22,13 @@ jobs:
       - name: Project build
         run: |
           mkdir build
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
-          cmake --install build --prefix install/
-
-      - name: Project packaging
-        run: tar -czvf mdvlib.tar.gz install/
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mdvlib
-          path: mdvlib.tar.gz
+          cmake -S library -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --target package
 
       - name: Release
         uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: mdvlib.tar.gz
+          files: 
+            build/mdvlib-prerelease-Linux.deb
+            build/mdvlib-prerelease-Linux.tar.gz

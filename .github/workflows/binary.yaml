@@ -14,6 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Get dependencies
+        run: |
+          apt-get update
+          apt-get install -y build-essential cmake
+
       - name: Project build
         run: |
           mkdir build
@@ -28,3 +33,8 @@ jobs:
         with:
           name: mdvlib
           path: mdvlib.tar.gz
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mdvlib.tar.gz
